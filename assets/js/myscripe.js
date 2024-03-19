@@ -1,41 +1,87 @@
 document.addEventListener("DOMContentLoaded", function () {
-    let buttons = document.getElementsByTagName('button');
+    let buttons = document.getElementsByTagName("button");
 
     for (let button of buttons) {
         button.addEventListener("click", function () {
             if (this.getAttribute("data-type") === "submit") {
-                alert("You clicked Submit!");
+                checkAnswer();
             } else {
                 let gameType = this.getAttribute("data-type");
-                alert(`you clicked ${gameType}`);
+                runGame(gameType);
             }
         });
     }
+
+    runGame("addition");
+
 });
 
 
-function runGame() {
-let num1= Math.floor(Math.random()*25)+1
-let num2= Math.floor(Math.random()*25)+1 
+function runGame(gameType) {
+
+
+    let num1 = Math.floor(Math.random() * 25) + 1;
+    let num2 = Math.floor(Math.random() * 25) + 1;
+
+    if (gameType === "addition") {
+        displayAdditionQuestion(num1, num2);
+    } else {
+        alert(`Unknown game type: ${gameType}`);
+        throw `Unknown game type: ${gameType}. Aborting!`;
+    }
+
 }
+
 
 function checkAnswer() {
 
+    let userAnswer = parseInt(document.getElementById("answer-box").value);
+    let ca = calculateCorrectAnswer();
+    let ic = userAnswer === ca[0];
+
+    if (ic) {
+        alert("Hey! You got it right! ");
+        incrementScore()
+    } else {
+        alert(`Awwww.... you answered ${userAnswer}. The correct answer was ${ca[0]}!`);
+        incrementWrongAnswer()
+    }
+
+    runGame(ca[1]);
+
 }
 
+
 function calculateCorrectAnswer() {
+
+    let operand1 = parseInt(document.getElementById('operand1').innerText);
+    let operand2 = parseInt(document.getElementById('operand2').innerText);
+    let operator = document.getElementById("operator").innerText;
+
+    if (operator === "+") {
+        return [operand1 + operand2, "addition"];
+    } else {
+        alert(`Unimplemented operator ${operator}`);
+        throw `Unimplemented operator ${operator}. Aborting!`;
+    }
 
 }
 
 function incrementScore() {
-
+    let olds = document.getElementById('score').innerText;
+    document.getElementById('score').innerText = ++olds;
 }
 
 function incrementWrongAnswer() {
-
+    let olds = document.getElementById('incorrect').innerText;
+    document.getElementById('incorrect').innerText = ++olds;
 }
 
-function displayAdditionQuestion() {
+function displayAdditionQuestion(operand1, operand2) {
+
+    document.getElementById('operand1').textContent = operand1;
+    document.getElementById('operand2').textContent = operand2;
+    document.getElementById('operator').textContent = "+";
 
 }
 
